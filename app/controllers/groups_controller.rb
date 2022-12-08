@@ -13,11 +13,12 @@ class GroupsController < ApplicationController
   end 
 
   def show
+    convert_to_param = params[:convert_to].blank? ? "EUR" : params[:convert_to]
     render json: { group: , 
-    group_members: group.group_members, 
-    group_expenses: group.group_expenses,
-    group_split_expenses: group.split_calculation
-  }, 
+      group_members: group.group_members, 
+      group_expenses: group.group_expenses,
+      group_split_expenses: group.split_calculation(convert_to_param)
+    }, 
     status: :ok
   end 
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_05_204049) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_07_210706) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -21,7 +21,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_05_204049) do
   end
 
   create_table "expense_payers", force: :cascade do |t|
-    t.integer "amount", null: false
+    t.decimal "amount", precision: 10, scale: 2, default: "0.0", null: false
     t.bigint "paid_by_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -31,7 +31,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_05_204049) do
   end
 
   create_table "expense_splits", force: :cascade do |t|
-    t.integer "amount"
+    t.decimal "amount", precision: 10, scale: 2, default: "0.0"
     t.bigint "expense_id", null: false
     t.bigint "giver_user_id", null: false
     t.bigint "receiver_user_id", null: false
@@ -44,12 +44,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_05_204049) do
   end
 
   create_table "expenses", force: :cascade do |t|
-    t.integer "amount"
+    t.decimal "amount", precision: 10, scale: 2, default: "0.0"
     t.bigint "group_id", null: false
     t.bigint "created_by_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "category_id"
+    t.string "name"
     t.index ["category_id"], name: "index_expenses_on_category_id"
     t.index ["created_by_id"], name: "index_expenses_on_created_by_id"
     t.index ["group_id"], name: "index_expenses_on_group_id"

@@ -13,7 +13,11 @@ class GroupsController < ApplicationController
   end 
 
   def show
-    render json: { group: , group_members: group.group_members}, 
+    render json: { group: , 
+    group_members: group.group_members, 
+    group_expenses: group.group_expenses,
+    group_split_expenses: group.split_calculation
+  }, 
     status: :ok
   end 
 

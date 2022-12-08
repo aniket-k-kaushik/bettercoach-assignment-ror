@@ -5,8 +5,10 @@ Rails.application.routes.draw do
                   registrations: 'users/registrations'
               }
   get '/member-data', to: 'members#show'
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Defines the root path route ("/")
-  # root "articles#index"
+  
+  resources :groups, only: [:index, :create, :update, :show, :destroy] do 
+    member do
+      patch :update_group_users
+    end
+  end 
 end

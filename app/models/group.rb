@@ -4,6 +4,7 @@ class Group < ApplicationRecord
 
   has_many :group_users, dependent: :destroy
   has_many :users, through: :group_users
+  has_many :expenses
 
   validates :name, presence: true, uniqueness: true
   validates :group_users, length: { minimum: 1, message: 'should have atleast one associated user' }

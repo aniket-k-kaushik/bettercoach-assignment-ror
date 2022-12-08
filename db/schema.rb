@@ -10,9 +10,50 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_05_091232) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_05_204049) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "categories", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "expense_payers", force: :cascade do |t|
+    t.integer "amount", null: false
+    t.bigint "paid_by_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "expense_id", null: false
+    t.index ["expense_id"], name: "index_expense_payers_on_expense_id"
+    t.index ["paid_by_id"], name: "index_expense_payers_on_paid_by_id"
+  end
+
+  create_table "expense_splits", force: :cascade do |t|
+    t.integer "amount"
+    t.bigint "expense_id", null: false
+    t.bigint "giver_user_id", null: false
+    t.bigint "receiver_user_id", null: false
+    t.integer "status", default: 1, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expense_id"], name: "index_expense_splits_on_expense_id"
+    t.index ["giver_user_id"], name: "index_expense_splits_on_giver_user_id"
+    t.index ["receiver_user_id"], name: "index_expense_splits_on_receiver_user_id"
+  end
+
+  create_table "expenses", force: :cascade do |t|
+    t.integer "amount"
+    t.bigint "group_id", null: false
+    t.bigint "created_by_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "category_id"
+    t.index ["category_id"], name: "index_expenses_on_category_id"
+    t.index ["created_by_id"], name: "index_expenses_on_created_by_id"
+    t.index ["group_id"], name: "index_expenses_on_group_id"
+  end
 
   create_table "group_users", force: :cascade do |t|
     t.bigint "group_id", null: false
@@ -50,6 +91,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_05_091232) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "expense_payers", "expenses"
+  add_foreign_key "expense_payers", "users", column: "paid_by_id"
+  add_foreign_key "expense_splits", "expenses"
+  add_foreign_key "expense_splits", "users", column: "giver_user_id"
+  add_foreign_key "expense_splits", "users", column: "receiver_user_id"
+  add_foreign_key "expenses", "categories"
+  add_foreign_key "expenses", "groups"
+  add_foreign_key "expenses", "users", column: "created_by_id"
   add_foreign_key "group_users", "groups"
   add_foreign_key "group_users", "users"
   add_foreign_key "groups", "users", column: "created_by_id"

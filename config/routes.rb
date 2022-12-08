@@ -11,4 +11,6 @@ Rails.application.routes.draw do
       patch :update_group_users
     end
   end 
+
+  resources :categories
 end

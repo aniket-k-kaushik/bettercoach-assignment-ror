@@ -3,35 +3,23 @@ class GroupsController < ApplicationController
   before_action :group, only: [:show, :update, :update_group_members, :destroy]
 
   def index
-    render json: { 
-      group: "#{current_user.groups.to_json}",  
-      message: "List of all the Group #{current_user.email} is part of" 
-    }, 
-    status: :ok
+    @groups = current_user.groups
+    render json: @groups, status: :ok
   end 
 
   def create 
-    render json: {
-      group: Group.create!(group_params),
-      message: "Group Created Successfully."
-    }, 
-    status: :ok
+    @group = Group.create!(group_params)
+    render json: @group, status: :ok
   end 
 
   def show
-    render json: {
-      group: ,
-      group_members: group.group_members
-    }
+    render json: { group: , group_members: group.group_members}, 
+    status: :ok
   end 
 
   def update
-    group.update!(group_params)
-    render json: {
-      group: ,
-      message: "#{group.name} updated successfully."
-    },
-    status: :ok
+    @group = group.update!(group_params)
+    render json: @group, status: :ok
   end
 
   def update_group_users
@@ -44,17 +32,14 @@ class GroupsController < ApplicationController
   end 
 
   def destroy
-    render json: {
-      group: group.destroy!, 
-      message: "Deleted #{group.name}"
-    }, 
-    status: :ok
+    @group = group.destroy!
+    render json: @group, status: :ok
   end 
 
   private 
 
     def group 
-      @_group ||= Group.find(params[:id])
+      @group ||= Group.find(params[:id])
     end  
 
     def group_params
